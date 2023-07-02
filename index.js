@@ -10,6 +10,10 @@ function getComputeChoice() {
     else return 'scissors';
 }
 
+
+/*
+    Plays a single round of rock paper scissor. 
+*/
 function playRound() {
     let computerSelection = getComputeChoice();
     console.log("AI has selected their weapon!")
@@ -33,15 +37,17 @@ function playRound() {
         
 }
 
+/*
+    Plays 5 rounds of rock paper scissor. Prints to the console whether or not
+    there is a winner or if it was a tie. 
+*/
 function game() {
     let userScore = 0
     let computerScore = 0
 
     for (let i = 0; i < 5; ++i) {
         let result = playRound();
-        if (result == 0) {
-            continue;
-        }
+        if (result == 0) continue;
         if (result == 2) {
             userScore += 1;
             console.log("You won round " + (i + 1));
