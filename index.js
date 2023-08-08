@@ -10,21 +10,48 @@ function getComputeChoice() {
     else return 'scissors';
 }
 
+function showMessage(text, time) {
+    let index = 0;
+    let interval;
+
+    function generateText() {
+        let div = document.querySelector('#notifications');
+        if (index >= text.length) {
+            clearInterval(interval)
+            return;
+        };
+        div.textContent += text[index];
+        index++;
+    }
+    let div = document.querySelector('#notifications');
+    div.textContent = '';
+    return {
+        start: function() {
+            interval = setInterval(generateText, time);
+        },
+        stop: function() {
+            clearInterval(interval);
+        }
+    };
+}
+
 
 /*
     Plays a single round of rock paper scissor. 
 */
-function playRound() {
+function playRound(e) {
     let computerSelection = getComputeChoice();
-    console.log("AI has selected their weapon!")
+    let text = 'AI has chosen their weapon!';
+    let temp = showMessage(text, 100);
+    temp.start();
 
-    let userSelection = prompt("Pick you weapon: Rock, Paper or Scissors");
-
+    let userSelection = e.target.getAttribute('data-key');
+    console.log(userSelection)
     if (computerSelection === userSelection.toLowerCase()){
         console.log("This round is a draw!")
         return 0;
     }
-    if (computerSelection == 'rock' && userSelection == 'scissor' || 
+    if (computerSelection == 'rock' && userSelection == 'scissors' || 
         computerSelection == 'scissors' && userSelection == 'paper' || 
         computerSelection == 'paper' && userSelection == 'rock') {
         console.log(computerSelection + " beats " + userSelection)
@@ -66,4 +93,6 @@ function game() {
     else console.log("You lose!")
 }
 
-game();
+window.addEventListener('click', playRound);
+
+// game();
