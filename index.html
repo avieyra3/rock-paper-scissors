@@ -8,21 +8,38 @@
         <link rel="stylesheet" href="style.css">
     </head>
     <body>
+
         <div id="container">
             <header>
                 <h1>Choose your Weapon!</h1>
             </header>
 
             <div id="notifications"></div>
-            
+
             <div id="btns">
                 <button data-key="rock" class="rock">Rock
                     <!-- <img src="img/icons8-rock-100.png"> -->
                 </button>
                 <button data-key="paper" class="paper">Paper</button>
-                <button data-key="scissor" class="scissor">Scissors</button>
+                <button data-key="scissors" class="scissor">Scissors</button>
             </div>
+
+            <div class="score-chart">
+                <div class="human-chart">
+                    <div class="human">Human</div>
+                    <div class="humanScore">0</div>
+                </div>
+                <div class="round-chart">
+                    <div class="round-heading">Round</div>
+                    <div class="roundNumber">0</div>
+                </div>
+                <div class="ai-chart">
+                    <div class="ai">AI</div>
+                    <div class="aiScore">0</div>
+                </div>
+            </div>  
         </div>
+
     </body>
     <script type="text/javascript" src="index.js"></script>
 </html>

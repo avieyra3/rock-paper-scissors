@@ -10,58 +10,63 @@ function getComputeChoice() {
     else return 'scissors';
 }
 
-function showMessage(text, time) {
+function showMessage(text, time, callback) {
     let index = 0;
     let interval;
+    let div = document.querySelector('#notifications');
 
     function generateText() {
-        let div = document.querySelector('#notifications');
         if (index >= text.length) {
-            clearInterval(interval)
+            clearInterval(interval);
+            callback();
             return;
         };
         div.textContent += text[index];
         index++;
     }
-    let div = document.querySelector('#notifications');
+
     div.textContent = '';
-    return {
-        start: function() {
-            interval = setInterval(generateText, time);
-        },
-        stop: function() {
-            clearInterval(interval);
-        }
+    interval = setInterval(generateText, time);
     };
-}
 
 
 /*
     Plays a single round of rock paper scissor. 
 */
-function playRound(e) {
+async function playRound(e) {
+    let userScore = 0
+    let computerScore = 0
+    let round = document.querySelector('.roundNumber');
+    round.textContent = (parseInt(round.textContent) + 1).toString();
     let computerSelection = getComputeChoice();
-    let text = 'AI has chosen their weapon!';
-    let temp = showMessage(text, 100);
-    temp.start();
-
     let userSelection = e.target.getAttribute('data-key');
-    console.log(userSelection)
-    if (computerSelection === userSelection.toLowerCase()){
-        console.log("This round is a draw!")
-        return 0;
-    }
-    if (computerSelection == 'rock' && userSelection == 'scissors' || 
-        computerSelection == 'scissors' && userSelection == 'paper' || 
-        computerSelection == 'paper' && userSelection == 'rock') {
-        console.log(computerSelection + " beats " + userSelection)
-        return 1;
-    }
-    else {
-        console.log(userSelection + " beats " + computerSelection)
-        return 2;
-    }
-        
+    let weaponsChosenText = `you chose: ${userSelection}, AI chose: ${computerSelection}`;
+
+    showMessage(weaponsChosenText, 100, setTimeout(function() {
+        let result = '';
+        if (computerSelection === userSelection){
+            result = "This round is a draw!"
+            showMessage(result, 100, setTimeout(() => {}, result.length * 1000));
+        }
+        else if (computerSelection == 'rock' && userSelection == 'scissors' || 
+            computerSelection == 'scissors' && userSelection == 'paper' || 
+            computerSelection == 'paper' && userSelection == 'rock') {
+
+            result = computerSelection + " beats " + userSelection
+            showMessage(result, 100, result.length * 1000);
+
+            let aiScore = document.querySelector('.aiScore');
+            let aiNewScore = parseInt(aiScore.textContent) + 1;
+            aiScore.textContent = aiNewScore.toString(); 
+        }
+        else {
+            result = userSelection + " beats " + computerSelection;
+            showMessage(result, 100, result.length * 1000);
+            let humanScore = document.querySelector('.humanScore');
+            let newHumanScore = parseInt(humanScore.textContent) + 1;
+            humanScore.textContent = newHumanScore.toString();
+        }
+    }, weaponsChosenText.length * 100 + 1000));
 }
 
 /*
@@ -77,13 +82,12 @@ function game() {
         if (result == 0) continue;
         if (result == 2) {
             userScore += 1;
-            console.log("You won round " + (i + 1));
+            showMessage("You won round " + (i + 1), 100, () => {});
         }
         else {
             computerScore += 1;
-            console.log("AI wins round " + (i + 1));
+            showMessage("AI wins round " + (i + 1), 100, () => {});
         }
-        
         console.log("User score: " + userScore)
         console.log("computer score: " + computerScore)
     }
@@ -92,7 +96,9 @@ function game() {
     else if (userScore > computerScore) console.log("You win!")
     else console.log("You lose!")
 }
-
+showMessage('Let the Battles Begin!', 100, setTimeout(() =>{}, 'Let the Battles Begin!'.length * 1000));
 window.addEventListener('click', playRound);
+
+
 
 // game();
