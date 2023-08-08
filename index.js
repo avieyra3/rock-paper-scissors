@@ -27,13 +27,12 @@ function showMessage(text, time, callback) {
 
     div.textContent = '';
     interval = setInterval(generateText, time);
-    };
-
+};
 
 /*
     Plays a single round of rock paper scissor. 
 */
-async function playRound(e) {
+function playRound(e) {
     let userScore = 0
     let computerScore = 0
     let round = document.querySelector('.roundNumber');
@@ -62,11 +61,27 @@ async function playRound(e) {
         else {
             result = userSelection + " beats " + computerSelection;
             showMessage(result, 100, result.length * 1000);
+
             let humanScore = document.querySelector('.humanScore');
             let newHumanScore = parseInt(humanScore.textContent) + 1;
             humanScore.textContent = newHumanScore.toString();
         }
     }, weaponsChosenText.length * 100 + 1000));
+
+    if (round.textContent == '5') {
+        let humanScore = document.querySelector('.humanScore');
+        let aiScore = document.querySelector('.aiScore');
+
+        if (parseInt(aiScore.textContent) > parseInt(humanScore.textContent)) {
+            showMessage('AI Wins Rock, Paper, Scissors!', 100, setTimeout(() => {}, 'AI Wins Rock, Paper, Scissors!'.length * 1000));
+        }
+        else {
+            showMessage('You win Rock, Paper, Scissors!', 100, setTimeout(() => {}, 'You win Rock, Paper, Scissors!'.length * 1000));
+        }
+        humanScore.textContent = '0'
+        round.textContent = '0';
+        aiScore.textContent = '0';
+    }
 }
 
 /*
@@ -98,7 +113,3 @@ function game() {
 }
 showMessage('Let the Battles Begin!', 100, setTimeout(() =>{}, 'Let the Battles Begin!'.length * 1000));
 window.addEventListener('click', playRound);
-
-
-
-// game();
