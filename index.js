@@ -81,8 +81,8 @@ function playRound(e) {
         round.textContent = '0';
         aiScore.textContent = '0';
         userScore.textContent = '0';
+        setTimeout( () => displayText('Pick a new weapon to play again!'), 4000);
     }
-
 }
 
 showMessage( 'Let the Battles Begin!', 100, setTimeout( function() {
