@@ -1,19 +1,22 @@
 /* 
     This is a script file that provides one to play Rock 
-    Paper Scisspr with an ai bot
+    Paper Scissor with an ai bot
 */
 
+/* global variables */
+let choice = {'0': 'rock', '1': 'paper', '2': 'scissors'};
+let aiScore = document.querySelector('.aiScore');
+let userScore = document.querySelector('.humanScore');
+let round = document.querySelector('.roundNumber');
+
 function getComputeChoice() {
-    let choice = Math.floor(Math.random() * 3);
-    if (choice == 0) return 'rock';
-    else if (choice == 1) return 'paper';
-    else return 'scissors';
+    return Math.floor(Math.random() * 3);
 }
 
 function showMessage(text, time, callback) {
     let index = 0;
     let interval;
-    let div = document.querySelector('#notifications');
+    let div = document.querySelector('h1');
 
     function generateText() {
         if (index >= text.length) {
@@ -29,87 +32,62 @@ function showMessage(text, time, callback) {
     interval = setInterval(generateText, time);
 };
 
+function displayText(text) {
+    let div = document.querySelector('#notifications');
+    div.textContent = text
+}
+
+function determineWinner(e) {
+    let computerSelection = getComputeChoice();
+    let userSelection = parseInt(e.target.getAttribute('data-key'));
+    let resultMatrix = [ [0, 1, 2], [2, 0, 1], [1, 2, 0] ];
+    displayText(`${choice[userSelection]} versus ${choice[computerSelection]}`);
+
+    switch(resultMatrix[userSelection][computerSelection]) {
+
+        case 0:
+            setTimeout(() => displayText("You both chose the same weapon!"), 1000);
+            setTimeout(() => displayText("This round is a draw!"), 2000);
+            break;
+        case 1: 
+            setTimeout(() => displayText(choice[computerSelection] + " beats " + choice[userSelection]), 1000);
+            setTimeout(() => displayText(`AI Wins round: ${round.textContent}`), 2000);
+            aiScore.textContent = parseInt(aiScore.textContent) + 1;
+            break;
+        case 2:
+            setTimeout(() => displayText(choice[userSelection] + " beats " + choice[computerSelection]), 1000);
+            setTimeout(() => displayText(`You win round: ${round.textContent}`), 2000);
+            userScore.textContent = parseInt(userScore.textContent) + 1;
+            break;
+    }
+};
+
 /*
-    Plays a single round of rock paper scissor. 
+    Plays a round of rock paper scissors until 5 rounds are played before reset. 
 */
 function playRound(e) {
-    let userScore = 0
-    let computerScore = 0
-    let round = document.querySelector('.roundNumber');
     round.textContent = (parseInt(round.textContent) + 1).toString();
-    let computerSelection = getComputeChoice();
-    let userSelection = e.target.getAttribute('data-key');
-    let weaponsChosenText = `you chose: ${userSelection}, AI chose: ${computerSelection}`;
-
-    showMessage(weaponsChosenText, 100, setTimeout(function() {
-        let result = '';
-        if (computerSelection === userSelection){
-            result = "This round is a draw!"
-            showMessage(result, 100, setTimeout(() => {}, result.length * 1000));
+    determineWinner(e);
+    if (parseInt(round.textContent) >= 5) {
+        if (parseInt(aiScore.textContent) > parseInt(userScore.textContent)) {
+            setTimeout( () => displayText('AI wins Rock, Paper, Scissors!'), 2000);
         }
-        else if (computerSelection == 'rock' && userSelection == 'scissors' || 
-            computerSelection == 'scissors' && userSelection == 'paper' || 
-            computerSelection == 'paper' && userSelection == 'rock') {
-
-            result = computerSelection + " beats " + userSelection
-            showMessage(result, 100, result.length * 1000);
-
-            let aiScore = document.querySelector('.aiScore');
-            let aiNewScore = parseInt(aiScore.textContent) + 1;
-            aiScore.textContent = aiNewScore.toString(); 
+        else if (parseInt(userScore.textContent) > parseInt(aiScore.textContent)) {
+            setTimeout( () => displayText('You won Rock, Paper, Scissors!'), 2000);
         }
         else {
-            result = userSelection + " beats " + computerSelection;
-            showMessage(result, 100, result.length * 1000);
-
-            let humanScore = document.querySelector('.humanScore');
-            let newHumanScore = parseInt(humanScore.textContent) + 1;
-            humanScore.textContent = newHumanScore.toString();
+            setTimeout( () => displayText('You and AI tied Rock, Paper, Scissors!'), 2000);
         }
-    }, weaponsChosenText.length * 100 + 1000));
-
-    if (round.textContent == '5') {
-        let humanScore = document.querySelector('.humanScore');
-        let aiScore = document.querySelector('.aiScore');
-
-        if (parseInt(aiScore.textContent) > parseInt(humanScore.textContent)) {
-            showMessage('AI Wins Rock, Paper, Scissors!', 100, setTimeout(() => {}, 'AI Wins Rock, Paper, Scissors!'.length * 1000));
-        }
-        else {
-            showMessage('You win Rock, Paper, Scissors!', 100, setTimeout(() => {}, 'You win Rock, Paper, Scissors!'.length * 1000));
-        }
-        humanScore.textContent = '0'
         round.textContent = '0';
         aiScore.textContent = '0';
-    }
-}
-
-/*
-    Plays 5 rounds of rock paper scissor. Prints to the console whether or not
-    there is a winner or if it was a tie. 
-*/
-function game() {
-    let userScore = 0
-    let computerScore = 0
-
-    for (let i = 0; i < 5; ++i) {
-        let result = playRound();
-        if (result == 0) continue;
-        if (result == 2) {
-            userScore += 1;
-            showMessage("You won round " + (i + 1), 100, () => {});
-        }
-        else {
-            computerScore += 1;
-            showMessage("AI wins round " + (i + 1), 100, () => {});
-        }
-        console.log("User score: " + userScore)
-        console.log("computer score: " + computerScore)
+        userScore.textContent = '0';
     }
 
-    if (userScore == computerScore) console.log("There are no winners in this game!")
-    else if (userScore > computerScore) console.log("You win!")
-    else console.log("You lose!")
 }
-showMessage('Let the Battles Begin!', 100, setTimeout(() =>{}, 'Let the Battles Begin!'.length * 1000));
-window.addEventListener('click', playRound);
+
+showMessage( 'Let the Battles Begin!', 100, setTimeout( function() {
+    showMessage( 'Choose Your Weapon!', 100, setTimeout(() => {}, 'Choose Your Weapon!'.length * 100 + 1000) );
+}, 'Let the Battles Begin!'.length * 100 + 1000) );
+
+let btns = document.querySelectorAll('button');
+btns.forEach(btn => btn.addEventListener('click', playRound));

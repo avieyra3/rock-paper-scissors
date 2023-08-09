@@ -40,7 +40,8 @@ header {
     font-size: xxx-large; 
     display: flex; 
     justify-content: center;
-    word-wrap: break-word;
+    flex-wrap: wrap;
+    align-items: center;
 }
 
 #btns {
