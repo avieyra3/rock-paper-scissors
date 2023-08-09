@@ -13,7 +13,7 @@ function getComputeChoice() {
     return Math.floor(Math.random() * 3);
 }
 
-function showMessage(text, time, callback) {
+function introMessage(text, time, callback) {
     let index = 0;
     let interval;
     let div = document.querySelector('h1');
@@ -31,6 +31,7 @@ function showMessage(text, time, callback) {
     div.textContent = '';
     interval = setInterval(generateText, time);
 };
+
 
 function displayText(text) {
     let div = document.querySelector('#notifications');
@@ -85,8 +86,8 @@ function playRound(e) {
     }
 }
 
-showMessage( 'Let the Battles Begin!', 100, setTimeout( function() {
-    showMessage( 'Choose Your Weapon!', 100, setTimeout(() => {}, 'Choose Your Weapon!'.length * 100 + 1000) );
+introMessage( 'Let the Battles Begin!', 100, setTimeout( function() {
+    introMessage( 'Choose Your Weapon!', 100, setTimeout(() => {}, 'Choose Your Weapon!'.length * 100 + 1000) );
 }, 'Let the Battles Begin!'.length * 100 + 1000) );
 
 let btns = document.querySelectorAll('button');
